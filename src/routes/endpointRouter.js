@@ -3,6 +3,8 @@ const path = require('path');
 const router = express.Router();
 const usersController = require('../controllers/usersController');
 const gamesController = require('../controllers/gamesController');
+const newsController = require('../controllers/gamesController');
+const likeByNewsController = require('../controllers/gamesController');
 
 const app = express();
 
@@ -30,5 +32,18 @@ router.get('/api/games/getAll', gamesController.getAllGames);
 router.post('/api/games-create/post', gamesController.createGame);
 router.put('/api/games/update', gamesController.updateGame);
 router.delete('/api/games/delete', gamesController.deleteGame);
+
+// Роути для новин
+router.get('/api/news/getAll', newsController.getAllNews);
+router.post('/api/news/create', newsController.createNews);
+router.put('/api/news/update', newsController.updateNews);
+router.delete('/api/news/delete', newsController.deleteNews);
+
+// Роути для лайків новин
+router.get('/api/newsLikes/getLikesByNewsId', likeByNewsController.getLikesByNewsId);
+router.post('/api/newsLikes/addLike', likeByNewsController.addLikeToNews);
+router.delete('/api/newsLikes/removeLike', likeByNewsController.removeLikeFromNews);
+
+
 
 module.exports = router;
