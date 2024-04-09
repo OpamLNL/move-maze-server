@@ -26,7 +26,6 @@ const getUserById = async (req, res) => {
 // Отримати всіх користувачів
 const getAllUsers = async (req, res) => {
     try {
-        console.log("serserrr1");
         const users = await userModel.getAllUsers();
         res.status(200).json(users);
     } catch (error) {

@@ -5,6 +5,8 @@ const app = express();
 const http = require('http');
 const handleRequest = require('./routes/endpointRouter');
 const dbConnection = require("./config/database");
+const path = require("path");
+const morgan = require("morgan");
 
 // Middleware для обробки CORS
 app.use((req, res, next) => {
@@ -13,6 +15,13 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 });
+
+const imagesPath = path.join(__dirname, 'public', 'images', 'posters');
+app.use('/images/posters', express.static(imagesPath));
+
+// Використання middleware morgan для виводу логів
+app.use(morgan('combined'));
+
 
 // Підключення ендпойнтроутера
 app.use(handleRequest);

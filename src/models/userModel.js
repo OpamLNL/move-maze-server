@@ -17,7 +17,6 @@ const getUserById = async (userId) => {
 // Отримати всіх користувачів
 const getAllUsers = async () => {
     return new Promise((resolve, reject) => {
-        console.log("gettttt");
         const sqlQuery = 'SELECT * FROM users';
         dbConnection.query(sqlQuery, (error, results) => {
             if (error) {
