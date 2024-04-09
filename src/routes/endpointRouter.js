@@ -3,8 +3,8 @@ const path = require('path');
 const router = express.Router();
 const usersController = require('../controllers/usersController');
 const gamesController = require('../controllers/gamesController');
-const newsController = require('../controllers/gamesController');
-const likeByNewsController = require('../controllers/gamesController');
+const newsController = require('../controllers/newsController');
+const likeByNewsController = require('../controllers/likesByNewsController');
 
 const app = express();
 

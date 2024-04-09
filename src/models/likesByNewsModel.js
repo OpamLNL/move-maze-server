@@ -3,7 +3,7 @@ const dbConnection = require('../config/database');
 // Отримати всі лайки новини
 const getLikesByNewsId = async (newsId) => {
     return new Promise((resolve, reject) => {
-        const sqlQuery = 'SELECT * FROM NewsLikes WHERE news_id = ?';
+        const sqlQuery = 'SELECT * FROM News_Likes WHERE news_id = ?';
         dbConnection.query(sqlQuery, newsId, (error, results) => {
             if (error) {
                 reject(error);
@@ -17,7 +17,7 @@ const getLikesByNewsId = async (newsId) => {
 // Додати лайк до новини
 const addLikeToNews = async (newsId, userId) => {
     return new Promise((resolve, reject) => {
-        const sqlQuery = 'INSERT INTO NewsLikes (news_id, user_id) VALUES (?, ?)';
+        const sqlQuery = 'INSERT INTO News_Likes (news_id, user_id) VALUES (?, ?)';
         dbConnection.query(sqlQuery, [newsId, userId], (error, result) => {
             if (error) {
                 reject(error);
@@ -31,7 +31,7 @@ const addLikeToNews = async (newsId, userId) => {
 // Видалити лайк з новини
 const removeLikeFromNews = async (newsId, userId) => {
     return new Promise((resolve, reject) => {
-        const sqlQuery = 'DELETE FROM NewsLikes WHERE news_id = ? AND user_id = ?';
+        const sqlQuery = 'DELETE FROM News_Likes WHERE news_id = ? AND user_id = ?';
         dbConnection.query(sqlQuery, [newsId, userId], (error) => {
             if (error) {
                 reject(error);
