@@ -16,12 +16,15 @@ app.use((req, res, next) => {
     next();
 });
 
-const imagesPath = path.join(__dirname, 'public', 'images', 'posters');
-app.use('/images/posters', express.static(imagesPath));
+// path to public images
+const imagesPath = path.join(__dirname, 'public', 'images');
+app.use('/images', express.static(imagesPath));
 
 // Використання middleware morgan для виводу логів
 app.use(morgan('combined'));
 
+// Middleware для парсингу JSON тіл
+app.use(express.json());
 
 // Підключення ендпойнтроутера
 app.use(handleRequest);

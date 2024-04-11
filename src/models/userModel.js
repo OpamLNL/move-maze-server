@@ -29,6 +29,8 @@ const getAllUsers = async () => {
 };
 
 // Створити нового користувача
+const jwt = require('jsonwebtoken');
+
 const createUser = async (userData) => {
     return new Promise((resolve, reject) => {
         const sqlQuery = 'INSERT INTO users SET ?';
@@ -36,7 +38,16 @@ const createUser = async (userData) => {
             if (error) {
                 reject(error);
             } else {
-                resolve({ id: result.insertId, ...userData });
+                // Припустимо, що в userData не міститься пароль, або він хешований
+                const userWithoutPassword = { id: result.insertId, ...userData };
+                // Генерація токена
+                const token = jwt.sign(
+                    { id: userWithoutPassword.id },
+                    process.env.JWT_SECRET_KEY, // використовуйте секретний ключ з вашого конфігураційного файлу або змінної середовища
+                    { expiresIn: '24h' }
+                );
+
+                resolve({ user: userWithoutPassword, token });
             }
         });
     });
