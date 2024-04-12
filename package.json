@@ -1,6 +1,9 @@
 {
   "name": "move-maze-server",
   "version": "1.0.0",
+  "scripts": {
+    "start": "node ./src/server.js"
+  },
   "dependencies": {
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",

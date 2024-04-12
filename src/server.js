@@ -16,9 +16,24 @@ app.use((req, res, next) => {
     next();
 });
 
+
+
 // path to public images
-const imagesPath = path.join(__dirname, 'public', 'images');
-app.use('/images', express.static(imagesPath));
+const imagesPath = path.join(process.cwd(), "public", "images");
+const relativePath = path.resolve(__dirname, "..", "public", "images");
+app.use('/images', express.static(relativePath));
+
+console.log(imagesPath, relativePath, imagesPath === relativePath);
+//const imagesPath = path.join(process.cwd(), "public", "images");
+
+
+
+
+console.log(process.cwd());
+console.log(__dirname);
+
+
+
 
 // Використання middleware morgan для виводу логів
 app.use(morgan('combined'));
