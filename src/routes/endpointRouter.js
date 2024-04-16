@@ -1,15 +1,10 @@
 const express = require('express');
-const path = require('path');
 const router = express.Router();
+
 const usersController = require('../controllers/usersController');
 const gamesController = require('../controllers/gamesController');
 const newsController = require('../controllers/newsController');
-const likeByNewsController = require('../controllers/likesByNewsController');
-
-const app = express();
-
-
-app.use(express.static(path.join(__dirname, 'public')));
+const tagsController = require('../controllers/tagsController');  // Додано контролер для тегів
 
 // Роут для локального сервера
 router.get('/', (req, res) => {
@@ -17,33 +12,71 @@ router.get('/', (req, res) => {
 });
 
 // Роути для користувачів
-router.get('/api/users/getUserById', usersController.getUserById);
 router.get('/api/users/getAll', usersController.getAllUsers);
-router.post('/api/users-create/post', usersController.createUser);
-router.put('/api/users/update', usersController.updateUser);
-router.delete('/api/users/delete', usersController.deleteUser);
+router.get('/api/users/getUserById', usersController.getUserById);
+router.post('/api/users/create', usersController.createUser);
+router.put('/api/users/update/:id', usersController.updateUser);
+router.delete('/api/users/delete/:id', usersController.deleteUser);
 
-// Роут для отримання активних користувачів
-router.get('/api/active-users/get', usersController.getActiveUsers);
+// Роути для адміністраторів користувачів
+router.get('/admin/users', usersController.getAllUsers);
+router.post('/admin/users/create', usersController.createUser);
+router.put('/admin/users/update/:id', usersController.updateUser);
+router.delete('/admin/users/delete/:id', usersController.deleteUser);
+
+// Роути для адміністраторів ігор
+router.get('/admin/games', gamesController.getAllGames);
+router.post('/admin/games/create', gamesController.createGame);
+router.put('/admin/games/update/:id', gamesController.updateGame);
+router.delete('/admin/games/delete/:id', gamesController.deleteGame);
+
+// Роути для адміністраторів новин
+router.get('/admin/news', newsController.getAllNews);
+router.post('/admin/news/create', newsController.createNews);
+router.put('/admin/news/update/:id', newsController.updateNews);
+router.delete('/admin/news/delete/:id', newsController.deleteNews);
+
+// Роути для адміністраторів тегів
+router.get('/admin/tags', tagsController.getAllTags);
+router.post('/admin/tags/create', tagsController.createTag);
+router.put('/admin/tags/update/:id', tagsController.updateTag);
+router.delete('/admin/tags/delete/:id', tagsController.deleteTag);
+
+// Роути для адміністраторів коментарів (припускаючи, що є контролер для коментарів)
+router.get('/admin/comments', commentsController.getAllComments);
+router.post('/admin/comments/create', commentsController.createComment);
+router.put('/admin/comments/update/:id', commentsController.updateComment);
+router.delete('/admin/comments/delete/:id', commentsController.deleteComment);
+
+// Роути для адміністраторів лайків (припускаючи, що є контролер для лайків)
+router.get('/admin/likes', likesController.getAllLikes);
+router.post('/admin/likes/add', likesController.addLike);
+router.delete('/admin/likes/remove/:id', likesController.removeLike);
 
 // Роути для ігор
-router.get('/api/games/getGameById', gamesController.getGameById);
 router.get('/api/games/getAll', gamesController.getAllGames);
-router.post('/api/games-create/post', gamesController.createGame);
-router.put('/api/games/update', gamesController.updateGame);
-router.delete('/api/games/delete', gamesController.deleteGame);
+router.get('/api/games/getGameById/:id', gamesController.getGameById);
+router.post('/api/games/create', gamesController.createGame);
+router.put('/api/games/update/:id', gamesController.updateGame);
+router.delete('/api/games/delete/:id', gamesController.deleteGame);
 
 // Роути для новин
 router.get('/api/news/getAll', newsController.getAllNews);
+router.get('/api/news/getById/:id', newsController.getNewsById);
 router.post('/api/news/create', newsController.createNews);
-router.put('/api/news/update', newsController.updateNews);
-router.delete('/api/news/delete', newsController.deleteNews);
+router.put('/api/news/update/:id', newsController.updateNews);
+router.delete('/api/news/delete/:id', newsController.deleteNews);
 
 // Роути для лайків новин
-router.get('/api/newsLikes/getLikesByNewsId', likeByNewsController.getLikesByNewsId);
+router.get('/api/newsLikes/getLikesByNewsId/:newsId', likeByNewsController.getLikesByNewsId);
 router.post('/api/newsLikes/addLike', likeByNewsController.addLikeToNews);
-router.delete('/api/newsLikes/removeLike', likeByNewsController.removeLikeFromNews);
+router.delete('/api/newsLikes/removeLike/:id', likeByNewsController.removeLikeFromNews);
 
-
+// Роути для тегів
+router.get('/api/tags/getAll', tagsController.getAllTags);
+router.get('/api/tags/getById/:id', tagsController.getTagById);
+router.post('/api/tags/create', tagsController.createTag);
+router.put('/api/tags/update/:id', tagsController.updateTag);
+router.delete('/api/tags/delete/:id', tagsController.deleteTag);
 
 module.exports = router;
