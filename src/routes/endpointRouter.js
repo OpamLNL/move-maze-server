@@ -7,11 +7,15 @@ const newsController = require('../controllers/newsController');
 const likesByNewsController = require('../controllers/likesByNewsController');
 const tagsController = require('../controllers/tagsController');
 const commentsController = require('../controllers/commentsController');
+const authController = require("../controllers/authController");
 
 // Роут для локального сервера
 router.get('/', (req, res) => {
     res.send('Ласкаво просимо на локальний сервер!');
 });
+
+//авторизація
+router.post('/api/auth/signin', authController.signIn);
 
 // Роути для користувачів
 router.get('/api/users/getAll', usersController.getAllUsers);

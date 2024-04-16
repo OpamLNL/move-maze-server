@@ -8,6 +8,8 @@ const dbConnection = require("./config/database");
 const path = require("path");
 const morgan = require("morgan");
 
+
+
 // Middleware для обробки CORS
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');

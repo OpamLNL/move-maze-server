@@ -1,5 +1,21 @@
 const dbConnection = require('../config/database');
 
+
+
+const getUserByEmail = async (email) => {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = 'SELECT * FROM users WHERE email = ?';
+        dbConnection.query(sqlQuery, [email], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results[0]); // Повертаємо перший знайдений результат (або null)
+            }
+        });
+    });
+};
+
+
 const getUserById = async (userId) => {
     return new Promise((resolve, reject) => {
         const sqlQuery = 'SELECT * FROM users WHERE id = ?';
@@ -101,6 +117,7 @@ const getActiveUsers = async () => {
 
 
 module.exports = {
+    getUserByEmail,
     getUserById,
     getAllUsers,
     createUser,
