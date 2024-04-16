@@ -1,4 +1,4 @@
-const tagsModel = require('../models/tagsModel');
+const tagsModel = require('../models/tagModel');
 
 // Отримати всі теги
 const getAllTags = async (req, res) => {

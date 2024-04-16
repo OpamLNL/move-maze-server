@@ -1,4 +1,4 @@
-const commentsModel = require('../models/commentsModel');
+const commentsModel = require('../models/commentModel');
 
 // Отримати всі коментарі для певного типу і ID
 const getCommentsByTypeAndId = async (req, res) => {
