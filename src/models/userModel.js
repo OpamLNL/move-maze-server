@@ -1,127 +1,53 @@
-const dbConnection = require('../config/database');
-
-
-
-const getUserByEmail = async (email) => {
-    return new Promise((resolve, reject) => {
-        const sqlQuery = 'SELECT * FROM users WHERE email = ?';
-        dbConnection.query(sqlQuery, [email], (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results[0]); // Повертаємо перший знайдений результат (або null)
-            }
-        });
-    });
-};
-
-
-const getUserById = async (userId) => {
-    return new Promise((resolve, reject) => {
-        const sqlQuery = 'SELECT * FROM users WHERE id = ?';
-        dbConnection.query(sqlQuery, userId, (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results[0]); // Повертаємо перший знайдений результат (або null)
-            }
-        });
-    });
-};
-
-
-// Отримати всіх користувачів
-const getAllUsers = async () => {
-    return new Promise((resolve, reject) => {
-        const sqlQuery = 'SELECT * FROM users';
-        dbConnection.query(sqlQuery, (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results);
-            }
-        });
-    });
-};
-
-// Створити нового користувача
+const userRepository = require('../repositories/userRepository');
 const jwt = require('jsonwebtoken');
 
+const getUserById = async (userId) => {
+    const [user] = await userRepository.getUserById(userId);
+    return user;
+};
+
+const getUserByEmail = async (email) => {
+    const [user] = await userRepository.getUserByEmail(email);
+    return user;
+};
+
+const getAllUsers = async () => {
+    const users = await userRepository.getAllUsers();
+    console.log(users);
+    return users;
+};
+
 const createUser = async (userData) => {
-    return new Promise((resolve, reject) => {
-        const sqlQuery = 'INSERT INTO users SET ?';
-        dbConnection.query(sqlQuery, userData, (error, result) => {
-            if (error) {
-                reject(error);
-            } else {
-                // Припустимо, що в userData не міститься пароль, або він хешований
-                const userWithoutPassword = { id: result.insertId, ...userData };
-                // Генерація токена
-                const token = jwt.sign(
-                    { id: userWithoutPassword.id },
-                    process.env.JWT_SECRET_KEY, // використовуйте секретний ключ з вашого конфігураційного файлу або змінної середовища
-                    { expiresIn: '24h' }
-                );
-
-                resolve({ user: userWithoutPassword, token });
-            }
-        });
-    });
+    const newUser = await userRepository.createUser(userData);
+    const token = jwt.sign(
+        { id: newUser.insertId },
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: '24h' }
+    );
+    return { user: newUser, token };
 };
 
-// Оновити інформацію про користувача
-const updateUser = async (userId, newData) => {
-    return new Promise((resolve, reject) => {
-        const sqlQuery = 'UPDATE users SET ? WHERE id = ?';
-        dbConnection.query(sqlQuery, [newData, userId], (error) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve({ id: userId, ...newData });
-            }
-        });
-    });
+const updateUser = async (userId, userData) => {
+    await userRepository.updateUser(userId, userData);
+    return { id: userId, ...userData };
 };
 
-// Видалити користувача
 const deleteUser = async (userId) => {
-    return new Promise((resolve, reject) => {
-        const sqlQuery = 'DELETE FROM users WHERE id = ?';
-        dbConnection.query(sqlQuery, userId, (error) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve({ id: userId });
-            }
-        });
-    });
+    await userRepository.deleteUser(userId);
+    return { id: userId };
 };
 
 const getActiveUsers = async () => {
-    return new Promise((resolve, reject) => {
-        // Визначення поточного часу
-        const currentTime = new Date();
-        // Віднімання 15 хвилин від поточного часу
-        const activeTimePeriod = new Date(currentTime.getTime() - (15 * 60 * 1000));
-
-        const sqlQuery = `SELECT * FROM users WHERE last_visit >= ?`;
-        dbConnection.query(sqlQuery, [activeTimePeriod.toISOString()], (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results);
-            }
-        });
-    });
+    return await userRepository.getActiveUsers();
 };
 
 
 module.exports = {
-    getUserByEmail,
     getUserById,
+    getUserByEmail,
     getAllUsers,
     createUser,
     updateUser,
     deleteUser,
-    getActiveUsers,
+    getActiveUsers
 };

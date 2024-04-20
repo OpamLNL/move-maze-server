@@ -4,9 +4,10 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const handleRequest = require('./routes/endpointRouter');
-const dbConnection = require("./config/database");
+const databaseConnection = require("./config/database");
 const path = require("path");
 const morgan = require("morgan");
+const {closePool} = require("./config/database");
 
 
 
@@ -45,10 +46,16 @@ server.listen(PORT, ipAddress, () => {
 });
 
 // Обробка закриття сервера
-process.on('SIGINT', () => {
-    dbConnection.end();
-    console.log('Сервер зупинено');
-    server.close(() => {
-        process.exit(0);
-    });
+process.on('SIGINT', async () => {
+    try {
+        await closePool();
+        console.log('Відключено від БД');
+        server.close(() => {
+            console.log('Сервер зупинено.');
+            process.exit(0);
+        });
+    } catch (error) {
+        console.error('Помилка при відключення від бд', error);
+        process.exit(1);
+    }
 });
