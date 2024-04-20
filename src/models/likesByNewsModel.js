@@ -1,49 +1,19 @@
-const dbConnection = require('../config/database');
+const likesRepository = require('../repositories/likesByNewsRepository');
 
-// Отримати всі лайки новини
 const getLikesByNewsId = async (newsId) => {
-    return new Promise((resolve, reject) => {
-        const sqlQuery = 'SELECT * FROM News_Likes WHERE news_id = ?';
-        dbConnection.query(sqlQuery, newsId, (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results);
-            }
-        });
-    });
+    return await likesRepository.getLikesByNewsId(newsId);
 };
 
-// Додати лайк до новини
-const addLikeToNews = async (newsId, userId) => {
-    return new Promise((resolve, reject) => {
-        const sqlQuery = 'INSERT INTO News_Likes (news_id, user_id) VALUES (?, ?)';
-        dbConnection.query(sqlQuery, [newsId, userId], (error, result) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve({ id: result.insertId, newsId, userId });
-            }
-        });
-    });
+const addLikeToNews = async (likeData) => {
+    return await likesRepository.addLikeToNews(likeData);
 };
 
-// Видалити лайк з новини
-const removeLikeFromNews = async (newsId, userId) => {
-    return new Promise((resolve, reject) => {
-        const sqlQuery = 'DELETE FROM News_Likes WHERE news_id = ? AND user_id = ?';
-        dbConnection.query(sqlQuery, [newsId, userId], (error) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve({ newsId, userId });
-            }
-        });
-    });
+const removeLikeFromNews = async (likeId) => {
+    return await likesRepository.removeLikeFromNews(likeId);
 };
 
 module.exports = {
     getLikesByNewsId,
     addLikeToNews,
-    removeLikeFromNews,
+    removeLikeFromNews
 };

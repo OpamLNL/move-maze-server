@@ -1,17 +1,11 @@
 // authController.js
 
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { getUserByEmail } = require('../models/userModel');
-
-
-
+const { generateToken } = require('../services/authService');
 
 exports.signIn = async (req, res) => {
     const { email, password } = req.body;
-    const jwt = require('jsonwebtoken');
-    console.log("JWT Secret is:", process.env.JWT_SECRET_KEY);
-    const secretKey = process.env.JWT_SECRET_KEY;
 
     try {
         const user = await getUserByEmail(email);
@@ -24,12 +18,7 @@ exports.signIn = async (req, res) => {
             return res.status(401).json({ message: "Невірний email або пароль" });
         }
 
-        const token = jwt.sign(
-            { userId: user.id, email: user.email },
-            secretKey,
-            { expiresIn: '1h' }
-        );
-
+        const token = generateToken({ userId: user.id, email: user.email });
         res.json({ token });
     } catch (error) {
         console.error('Auth error:', error);

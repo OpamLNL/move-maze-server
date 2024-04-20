@@ -1,64 +1,29 @@
-const dbConnection = require('../config/database');
+const newsRepository = require('../repositories/newsRepository');
 
-// Отримати всі новини
+const getNewsById = async (newsId) => {
+    return await newsRepository.getNewsById(newsId);
+};
+
 const getAllNews = async () => {
-    return new Promise((resolve, reject) => {
-        const sqlQuery = 'SELECT * FROM News';
-        dbConnection.query(sqlQuery, (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results);
-            }
-        });
-    });
+    return await newsRepository.getAllNews();
 };
 
-// Створити нову новину
 const createNews = async (newsData) => {
-    return new Promise((resolve, reject) => {
-        const sqlQuery = 'INSERT INTO News SET ?';
-        dbConnection.query(sqlQuery, newsData, (error, result) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve({ id: result.insertId, ...newsData });
-            }
-        });
-    });
+    return await newsRepository.createNews(newsData);
 };
 
-// Оновити новину
-const updateNews = async (newsId, newData) => {
-    return new Promise((resolve, reject) => {
-        const sqlQuery = 'UPDATE News SET ? WHERE id = ?';
-        dbConnection.query(sqlQuery, [newData, newsId], (error) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve({ id: newsId, ...newData });
-            }
-        });
-    });
+const updateNews = async (newsId, newsData) => {
+    return await newsRepository.updateNews(newsId, newsData);
 };
 
-// Видалити новину
 const deleteNews = async (newsId) => {
-    return new Promise((resolve, reject) => {
-        const sqlQuery = 'DELETE FROM News WHERE id = ?';
-        dbConnection.query(sqlQuery, newsId, (error) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve({ id: newsId });
-            }
-        });
-    });
+    return await newsRepository.deleteNews(newsId);
 };
 
 module.exports = {
+    getNewsById,
     getAllNews,
     createNews,
     updateNews,
-    deleteNews,
+    deleteNews
 };

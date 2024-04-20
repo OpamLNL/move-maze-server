@@ -60,18 +60,18 @@ router.post('/admin/likes/add', likesByNewsController.addLikeToNews);
 router.delete('/admin/likes/remove/:id', likesByNewsController.removeLikeFromNews);
 
 // Роути для ігор
-// router.get('/api/games/getAll', gamesController.getAllGames);
-// router.get('/api/games/getGameById/:id', gamesController.getGameById);
-// router.post('/api/games/create', gamesController.createGame);
-// router.put('/api/games/update/:id', gamesController.updateGame);
-// router.delete('/api/games/delete/:id', gamesController.deleteGame);
+router.get('/api/games/getAll', gamesController.getAllGames);
+router.get('/api/games/getGameById/:id', gamesController.getGameById);
+router.post('/api/games/create', gamesController.createGame);
+router.put('/api/games/update/:id', gamesController.updateGame);
+router.delete('/api/games/delete/:id', gamesController.deleteGame);
 
 // Роути для новин
-// router.get('/api/news/getAll', newsController.getAllNews);
-// //router.get('/api/news/getById/:id', newsController.getNewsById);
-// router.post('/api/news/create', newsController.createNews);
-// router.put('/api/news/update/:id', newsController.updateNews);
-// router.delete('/api/news/delete/:id', newsController.deleteNews);
+router.get('/api/news/getAll', newsController.getAllNews);
+// router.get('/api/news/getById/:id', newsController.getNewsById);
+router.post('/api/news/create', newsController.createNews);
+router.put('/api/news/update/:id', newsController.updateNews);
+router.delete('/api/news/delete/:id', newsController.deleteNews);
 
 // Роути для лайків новин
 router.get('/api/newsLikes/getLikesByNewsId/:newsId', likesByNewsController.getLikesByNewsId);
@@ -80,7 +80,7 @@ router.delete('/api/newsLikes/removeLike/:id', likesByNewsController.removeLikeF
 
 // Роути для тегів
 router.get('/api/tags/getAll', tagsController.getAllTags);
-//router.get('/api/tags/getById/:id', tagsController.getTagById);
+// router.get('/api/tags/getById/:id', tagsController.getTagById);
 router.post('/api/tags/create', tagsController.createTag);
 router.put('/api/tags/update/:id', tagsController.updateTag);
 router.delete('/api/tags/delete/:id', tagsController.deleteTag);

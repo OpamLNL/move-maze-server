@@ -1,43 +1,55 @@
-const dbConnection = require('../config/database');
+const tagsRepository = require('../repositories/tagRepository');
 
-// Отримати всі теги
+const getTagById = async (tagId) => {
+    try {
+        const tag = await tagsRepository.getTagById(tagId);
+        if (!tag) {
+            throw new Error('Тег не знайдено');
+        }
+        return tag;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const getAllTags = async () => {
-    const sqlQuery = 'SELECT * FROM tags';
-    return dbQuery(sqlQuery);
+    try {
+        const tags = await tagsRepository.getAllTags();
+        return tags;
+    } catch (error) {
+        throw error;
+    }
 };
 
-// Створити новий тег
 const createTag = async (tagData) => {
-    const sqlQuery = 'INSERT INTO tags SET ?';
-    return dbQuery(sqlQuery, [tagData]);
+    try {
+        const newTag = await tagsRepository.createTag(tagData);
+        return newTag;
+    } catch (error) {
+        throw error;
+    }
 };
 
-// Оновити тег
 const updateTag = async (tagId, tagData) => {
-    const sqlQuery = 'UPDATE tags SET ? WHERE id = ?';
-    return dbQuery(sqlQuery, [tagData, tagId]);
+    try {
+        const updatedTag = await tagsRepository.updateTag(tagId, tagData);
+        return updatedTag;
+    } catch (error) {
+        throw error;
+    }
 };
 
-// Видалити тег
 const deleteTag = async (tagId) => {
-    const sqlQuery = 'DELETE FROM tags WHERE id = ?';
-    return dbQuery(sqlQuery, [tagId]);
+    try {
+        const result = await tagsRepository.deleteTag(tagId);
+        return result;
+    } catch (error) {
+        throw error;
+    }
 };
-
-// Допоміжна функція для виконання запитів до бази даних
-async function dbQuery(sql, params) {
-    return new Promise((resolve, reject) => {
-        dbConnection.query(sql, params, (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results);
-            }
-        });
-    });
-}
 
 module.exports = {
+    getTagById,
     getAllTags,
     createTag,
     updateTag,

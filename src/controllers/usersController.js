@@ -1,9 +1,10 @@
-const userModel = require('../models/userModel');
 const bcrypt = require('bcrypt');
+const userModel = require('../models/userModel');
+const authService = require('../services/authService');
 
 const getUserById = async (req, res) => {
     try {
-        const userId = req.params.id; // Отримуємо айді з параметрів запиту
+        const userId = req.params.id;
 
         if (!userId) {
             return res.status(400).json({ error: 'Missing user ID' });
@@ -22,8 +23,6 @@ const getUserById = async (req, res) => {
     }
 };
 
-
-// Отримати всіх користувачів
 const getAllUsers = async (req, res) => {
     try {
         const users = await userModel.getAllUsers();
@@ -34,45 +33,29 @@ const getAllUsers = async (req, res) => {
     }
 };
 
-// Створити нового користувача
-const jwt = require('jsonwebtoken');
-const secretKey = process.env.JWT_SECRET_KEY;
-
-
-
-const hashPassword = async (password) => {
-    const saltRounds = 10;
-    return bcrypt.hash(password, saltRounds);
-};
-
 const createUser = async (req, res) => {
-
     try {
         const { username, email, password, avatar, birth_date, bio, phone_number, language, timezone } = req.body;
 
-        const hashedPassword = await hashPassword(password);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const userData = {
             username,
             email,
             password: hashedPassword,
-            avatar: avatar || 'default_avatar.png',  // Припустимо, 'default_avatar.png' - ваше зображення за замовчуванням
+            avatar: avatar || 'default_avatar.png',
             birth_date: birth_date || null,
             bio: bio || '',
             phone_number: phone_number || null,
-            language: language || 'uk',  // Припустимо, 'uk' - мова за замовчуванням
-            timezone: timezone || 'UTC',  // Припустимо, 'UTC' - часовий пояс за замовчуванням
-            status: 'active',  // Статус користувача за замовчуванням
-            last_visit: new Date()  // Записуємо час створення користувача як останній візит
+            language: language || 'uk',
+            timezone: timezone || 'UTC',
+            status: 'active',
+            last_visit: new Date()
         };
 
         const newUser = await userModel.createUser(userData);
 
-        const token = jwt.sign(
-            { id: newUser.id, username: newUser.username },
-            secretKey,
-            { expiresIn: '24h' }
-        );
+        const token = authService.generateToken({ id: newUser.id, username: newUser.username });
 
         res.status(201).json({ user: newUser, token });
     } catch (error) {
@@ -81,7 +64,6 @@ const createUser = async (req, res) => {
     }
 };
 
-// Оновити інформацію про користувача
 const updateUser = async (req, res) => {
     try {
         const updatedUser = await userModel.updateUser(req.params.id, req.body);
@@ -92,7 +74,6 @@ const updateUser = async (req, res) => {
     }
 };
 
-// Видалити користувача
 const deleteUser = async (req, res) => {
     try {
         await userModel.deleteUser(req.params.id);
@@ -103,7 +84,6 @@ const deleteUser = async (req, res) => {
     }
 };
 
-// Отримати активних користувачів
 const getActiveUsers = async (req, res) => {
     try {
         const activeTimePeriod = new Date(); // Отримання поточного часу
