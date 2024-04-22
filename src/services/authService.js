@@ -2,18 +2,27 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 // Генерування токена для користувача
-const generateToken = (userId) => {
-    return jwt.sign(
+const generateTokens = (userId) => {
+    const accessToken = jwt.sign(
         { id: userId },
-        process.env.JWT_SECRET_KEY,
-        { expiresIn: '24h' }
+        process.env.JWT_ACCESS_SECRET,
+        { expiresIn: '1h' }
     );
+
+    const refreshToken = jwt.sign(
+        { id: userId },
+        process.env.JWT_REFRESH_SECRET,
+        { expiresIn: '7d' }
+    );
+
+    return { accessToken, refreshToken };
 };
 
 // Перевірка токена на валідність
-const verifyToken = (token) => {
+const verifyToken = (token, isAccessToken = true) => {
+    const secretKey = isAccessToken ? process.env.JWT_ACCESS_SECRET : process.env.JWT_REFRESH_SECRET;
     try {
-        return jwt.verify(token, process.env.JWT_SECRET_KEY);
+        return jwt.verify(token, secretKey);
     } catch (error) {
         return null;
     }
@@ -28,7 +37,7 @@ const authenticateToken = (req, res, next) => {
         return res.sendStatus(401); // Немає токена
     }
 
-    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, user) => {
+    jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, user) => {
         if (err) {
             return res.sendStatus(403); // Недійсний токен
         }
@@ -39,7 +48,7 @@ const authenticateToken = (req, res, next) => {
 };
 
 module.exports = {
-    generateToken,
+    generateTokens,
     verifyToken,
     authenticateToken
 };

@@ -60,9 +60,9 @@ const createUser = async (req, res) => {
 
         const newUser = await userModel.createUser(userData);
 
-        const token = authService.generateToken({ id: newUser.id, username: newUser.username });
+        const { accessToken, refreshToken } = authService.generateTokens(newUser.id);
 
-        res.status(201).json({ user: newUser, token });
+        res.status(201).json({ user: newUser, accessToken, refreshToken });
     } catch (error) {
         console.error('Помилка створення користувача:', error);
         res.status(500).json({ error: 'Internal Server Error' });
