@@ -1,15 +1,15 @@
 // authController.js
-
 const bcrypt = require('bcrypt');
-const { getUserByEmail } = require('../models/userModel');
+const { getUserByEmail } = require('./usersController');
 const { generateToken } = require('../services/authService');
 
 exports.signIn = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const user = await getUserByEmail(email);
-        if (!user) {
+        const usersByEmail = await getUserByEmail(email);
+        const user = usersByEmail[0];
+        if (!usersByEmail) {
             return res.status(401).json({ message: "Невірний email або пароль" });
         }
 
@@ -19,6 +19,7 @@ exports.signIn = async (req, res) => {
         }
 
         const token = generateToken({ userId: user.id, email: user.email });
+        console.log("Генерований JWT:", token);
         res.json({ token });
     } catch (error) {
         console.error('Auth error:', error);

@@ -6,7 +6,7 @@ const getGameById = async (gameId) => {
 };
 
 const getAllGames = async () => {
-    const sqlQuery = 'SELECT id, title, description, genre FROM games';
+    const sqlQuery = 'SELECT id, title, description FROM games';
     return initializeDatabaseConnection.query(sqlQuery);
 };
 

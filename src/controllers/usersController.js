@@ -2,6 +2,11 @@ const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
 const authService = require('../services/authService');
 
+const getUserByEmail = async (email) => {
+    return userModel.getUserByEmail(email);
+};
+
+
 const getUserById = async (req, res) => {
     try {
         const userId = req.params.id;
@@ -97,9 +102,10 @@ const getActiveUsers = async (req, res) => {
 
 module.exports = {
     getUserById,
+    getUserByEmail,
     getAllUsers,
     createUser,
     updateUser,
     deleteUser,
-    getActiveUsers, // Додаємо метод отримання активних користувачів
+    getActiveUsers,
 };
