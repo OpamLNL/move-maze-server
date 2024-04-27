@@ -38,7 +38,7 @@ const getAllUsers = async (req, res) => {
     }
 };
 
-const createUser = async (req, res) => {
+const createUserAndAuthenticate = async (req, res) => {
     try {
         const { username, email, password, avatar, birth_date, bio, phone_number, language, timezone } = req.body;
 
@@ -100,11 +100,53 @@ const getActiveUsers = async (req, res) => {
     }
 };
 
+const createUserByAdmin = async (req, res) => {
+    try {
+        const { username, email, password, avatar, birth_date, bio, phone_number, language, timezone } = req.body;
+
+        // Генерація захешованого паролю
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const userData = {
+            username,
+            email,
+            password: hashedPassword,
+            avatar: avatar || 'default_avatar.png',
+            birth_date: birth_date || null,
+            bio: bio || '',
+            phone_number: phone_number || null,
+            language: language || 'uk',
+            timezone: timezone || 'UTC',
+            status: 'active',
+            last_visit: new Date()
+        };
+
+        // Створення користувача в базі даних
+        const newUser = await userModel.createUser(userData);
+
+        res.status(201).json({
+            message: 'Користувач успішно створений адміністратором',
+            user: {
+                id: newUser.id,
+                username: newUser.username,
+                email: newUser.email,
+                avatar: newUser.avatar
+            }
+        });
+    } catch (error) {
+        console.error('Помилка при створенні користувача:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
+
 module.exports = {
     getUserById,
     getUserByEmail,
     getAllUsers,
-    createUser,
+    createUserAndAuthenticate,
+    createUserByAdmin,
     updateUser,
     deleteUser,
     getActiveUsers,

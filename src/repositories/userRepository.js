@@ -7,10 +7,9 @@ const getUserById = async (userId) => {
 
 const getUserByEmail = async (email) => {
     const sqlQuery = 'SELECT * FROM users WHERE email = ?';
-    const user = await initializeDatabaseConnection.query(sqlQuery, [email]);
-console.log(user);
+    const [users, fields] = await initializeDatabaseConnection.query(sqlQuery, [email]);
 
-    return await initializeDatabaseConnection.query(sqlQuery, [email]);
+    return users || null;
 };
 
 const getAllUsers = async () => {

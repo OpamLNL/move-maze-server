@@ -4,7 +4,6 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const handleRequest = require('./routes/endpointRouter');
-const databaseConnection = require("./config/database");
 const path = require("path");
 const morgan = require("morgan");
 const {closePool} = require("./config/database");

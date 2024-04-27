@@ -1,5 +1,6 @@
 const userRepository = require('../repositories/userRepository');
-const { generateToken } = require('../services/authService');
+const { generateTokens } = require('../services/authService');
+const bcrypt = require("bcrypt");
 
 const getUserById = async (userId) => {
     try {
@@ -19,6 +20,7 @@ const getUserByEmail = async (email) => {
         if (!user) {
             throw new Error('Користувач не знайдений.');
         }
+        console.log('aaaaaaaa' + user);
         return user;
     } catch (error) {
         throw new Error('Помилка отримання користувача: ' + error.message);
@@ -36,11 +38,57 @@ const getAllUsers = async () => {
 
 const createUser = async (userData) => {
     try {
-        const newUser = await userRepository.createUser(userData);
-        const token = generateToken(newUser.id);
-        return { user: newUser, token };
+        const hashedPassword = await bcrypt.hash(userData.password, 10);
+
+        const newUser = await userRepository.createUser({
+            ...userData,
+            password: hashedPassword
+        });
+
+        return newUser;
     } catch (error) {
-        throw new Error('Помилка створення користувача: ' + error.message);
+        console.error('Error creating user:', error);
+        throw new Error('Error creating user: ' + error.message);
+    }
+};
+
+const createUserAndAuthenticate = async (req, res) => {
+    try {
+        const { username, email, password, avatar, birth_date, bio, phone_number, language, timezone } = req.body;
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const userData = {
+            username,
+            email,
+            password: hashedPassword,
+            avatar: avatar || 'default_avatar.png',
+            birth_date: birth_date || null,
+            bio: bio || '',
+            phone_number: phone_number || null,
+            language: language || 'uk',
+            timezone: timezone || 'UTC',
+            status: 'active',
+            last_visit: new Date()
+        };
+
+        const newUser = await userRepository.createUser(userData);
+
+        const { accessToken, refreshToken } = generateTokens(newUser.id);
+
+        res.status(201).json({
+            user: {
+                id: newUser.id,
+                username: newUser.username,
+                email: newUser.email,
+                avatar: newUser.avatar
+            },
+            accessToken,
+            refreshToken
+        });
+    } catch (error) {
+        console.error('Помилка створення користувача:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
@@ -64,8 +112,7 @@ const deleteUser = async (userId) => {
 
 const getActiveUsers = async () => {
     try {
-        const activeUsers = await userRepository.getActiveUsers();
-        return activeUsers;
+        return await userRepository.getActiveUsers();
     } catch (error) {
         throw new Error('Помилка отримання активних користувачів: ' + error.message);
     }
@@ -75,6 +122,7 @@ module.exports = {
     getUserById,
     getUserByEmail,
     getAllUsers,
+    createUserAndAuthenticate,
     createUser,
     updateUser,
     deleteUser,

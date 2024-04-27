@@ -20,13 +20,13 @@ router.post('/api/auth/signin', authController.signIn);
 // Роути для користувачів
 router.get('/api/users/getAll', usersController.getAllUsers);
 router.get('/api/users/getUserById', usersController.getUserById);
-router.post('/api/users/create', usersController.createUser);
+router.post('/api/users/create', usersController.createUserAndAuthenticate);
 router.put('/api/users/update/:id', usersController.updateUser);
 router.delete('/api/users/delete/:id', usersController.deleteUser);
 
 // Роути для адміністраторів користувачів
 router.get('/admin/users', usersController.getAllUsers);
-router.post('/admin/users/create', usersController.createUser);
+router.post('/admin/users/create', usersController.createUserByAdmin);
 router.put('/admin/users/update/:id', usersController.updateUser);
 router.delete('/admin/users/delete/:id', usersController.deleteUser);
 
