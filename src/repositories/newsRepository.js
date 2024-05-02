@@ -21,8 +21,9 @@ const updateNews = async (newsId, newsData) => {
 };
 
 const deleteNews = async (newsId) => {
+    const cleanedNewsId = newsId.substring(1);
     const sqlQuery = 'DELETE FROM news WHERE id = ?';
-    return initializeDatabaseConnection.query(sqlQuery, [newsId]);
+    return initializeDatabaseConnection.query(sqlQuery, [cleanedNewsId]);
 };
 
 module.exports = {

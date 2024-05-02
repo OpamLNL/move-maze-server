@@ -30,7 +30,6 @@ const updateUser = async (userId, userData) => {
 const deleteUser = async (userId) => {
     const cleanedUserId = userId.substring(1); // Прибираємо перший символ (двокрапку) не знаю чи та нормально
     const sqlQuery = 'DELETE FROM users WHERE id = ?';
-    console.log(cleanedUserId + "________________________________________");
     return initializeDatabaseConnection.query(sqlQuery, [cleanedUserId]);
 };
 
