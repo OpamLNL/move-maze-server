@@ -6,7 +6,7 @@ const getNewsById = async (newsId) => {
 };
 
 const getAllNews = async () => {
-    const sqlQuery = 'SELECT id, title, content, published_date FROM news';
+    const sqlQuery = 'SELECT id, title, content, published_date, image_url FROM news';
     return initializeDatabaseConnection.query(sqlQuery);
 };
 

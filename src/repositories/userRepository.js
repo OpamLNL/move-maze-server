@@ -8,7 +8,7 @@ const getUserById = async (userId) => {
 const getUserByEmail = async (email) => {
     const sqlQuery = 'SELECT * FROM users WHERE email = ?';
     const [users, fields] = await initializeDatabaseConnection.query(sqlQuery, [email]);
-
+    console.log(users[0]);
     return users || null;
 };
 
@@ -28,8 +28,10 @@ const updateUser = async (userId, userData) => {
 };
 
 const deleteUser = async (userId) => {
+    const cleanedUserId = userId.substring(1); // Прибираємо перший символ (двокрапку) не знаю чи та нормально
     const sqlQuery = 'DELETE FROM users WHERE id = ?';
-    return initializeDatabaseConnection.query(sqlQuery, [userId]);
+    console.log(cleanedUserId + "________________________________________");
+    return initializeDatabaseConnection.query(sqlQuery, [cleanedUserId]);
 };
 
 const getActiveUsers = async () => {

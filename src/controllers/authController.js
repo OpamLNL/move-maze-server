@@ -23,7 +23,8 @@ exports.signIn = async (req, res) => {
             username: user.username,
             email: user.email,
             avatar: user.avatar,
-            bio: user.bio
+            bio: user.bio,
+            role: user.role
         };
 
         console.log(`Користувач ${user.username} успішно авторизований.`);

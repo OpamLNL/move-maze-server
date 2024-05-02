@@ -20,7 +20,6 @@ const getUserByEmail = async (email) => {
         if (!user) {
             throw new Error('Користувач не знайдений.');
         }
-        console.log('aaaaaaaa' + user);
         return user;
     } catch (error) {
         throw new Error('Помилка отримання користувача: ' + error.message);
