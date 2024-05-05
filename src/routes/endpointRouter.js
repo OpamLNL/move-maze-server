@@ -68,7 +68,7 @@ router.delete('/api/games/delete/:id', gamesController.deleteGame);
 
 // Роути для новин
 router.get('/api/news/getAll', newsController.getAllNews);
-// router.get('/api/news/getById/:id', newsController.getNewsById);
+router.get('/api/news/getNewsById/:id', newsController.getNewsById);
 router.post('/api/news/create', newsController.createNews);
 router.put('/api/news/update/:id', newsController.updateNews);
 router.delete('/api/news/delete/:id', newsController.deleteNews);

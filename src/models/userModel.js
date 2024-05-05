@@ -92,6 +92,7 @@ const createUserAndAuthenticate = async (req, res) => {
 };
 
 const updateUser = async (userId, userData) => {
+    console.log(userData);
     try {
         const updatedUser = await userRepository.updateUser(userId, userData);
         return { id: userId, ...userData };

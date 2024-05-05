@@ -23,9 +23,80 @@ const createUser = async (userData) => {
 };
 
 const updateUser = async (userId, userData) => {
-    const sqlQuery = 'UPDATE users SET ? WHERE id = ?';
-    return initializeDatabaseConnection.query(sqlQuery, [userData, userId]);
+    let sqlQuery = `UPDATE users SET`;
+    let values = [];
+    let isFirstField = true;
+
+    console.log(userData);
+    // Перевірка, чи було змінено ім'я користувача
+    if (userData.username) {
+        sqlQuery += ` username = ?`;
+        values.push(userData.username);
+        isFirstField = false;
+    }
+
+    // Перевірка, чи було змінено email
+    if (userData.email) {
+        if (!isFirstField) sqlQuery += `,`;
+        sqlQuery += ` email = ?`;
+        values.push(userData.email);
+        isFirstField = false;
+    }
+
+    // Перевірка, чи було змінено пароль
+    if (userData.password) {
+        if (!isFirstField) sqlQuery += `,`;
+        sqlQuery += ` password = ?`;
+        values.push(userData.password);
+        isFirstField = false;
+    }
+
+    // Перевірка, чи було змінено аватар
+    if (userData.avatar) {
+        if (!isFirstField) sqlQuery += `,`;
+        sqlQuery += ` avatar = ?`;
+        values.push(userData.avatar);
+        isFirstField = false;
+    }
+
+    // Перевірка, чи було змінено біо
+    if (userData.bio) {
+        if (!isFirstField) sqlQuery += `,`;
+        sqlQuery += ` bio = ?`;
+        values.push(userData.bio);
+        isFirstField = false;
+    }
+
+    // Перевірка, чи було змінено номер телефону
+    if (userData.phone_number) {
+        if (!isFirstField) sqlQuery += `,`;
+        sqlQuery += ` phone_number = ?`;
+        values.push(userData.phone_number);
+        isFirstField = false;
+    }
+
+    // Перевірка, чи було змінено статус
+    if (userData.status) {
+        if (!isFirstField) sqlQuery += `,`;
+        sqlQuery += ` status = ?`;
+        values.push(userData.status);
+        isFirstField = false;
+    }
+
+    sqlQuery += ` WHERE id = ?`;
+    values.push(userId);
+
+    try {
+        const [result] = await initializeDatabaseConnection.query(sqlQuery, values);
+        return result;
+    } catch (error) {
+        console.error('Помилка оновлення користувача:', error);
+        throw error;
+    }
 };
+
+
+
 
 const deleteUser = async (userId) => {
     const cleanedUserId = userId.substring(1); // Прибираємо перший символ (двокрапку) не знаю чи та нормально

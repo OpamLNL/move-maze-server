@@ -18,6 +18,19 @@ const createNews = async (req, res) => {
     }
 };
 
+const getNewsById = async (req, res) => {
+    try {
+        const news = await newsModel.getNewsById(req.params.id);
+        if (!news) {
+            res.status(404).send('Новина не знайдена');
+        } else {
+            res.json(news);
+        }
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
 const updateNews = async (req, res) => {
     try {
         const news = await newsModel.updateNews(req.params.id, req.body);
@@ -37,6 +50,7 @@ const deleteNews = async (req, res) => {
 };
 
 module.exports = {
+    getNewsById,
     getAllNews,
     createNews,
     updateNews,
