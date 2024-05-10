@@ -5,10 +5,20 @@ const getUserById = async (userId) => {
     return initializeDatabaseConnection.query(sqlQuery, [userId]);
 };
 
+const getUserByUsername = async (userName) => {
+    console.log("in rep" + userName);
+    const sqlQuery = 'SELECT * FROM users WHERE username = ? LIMIT 1';
+
+    const [users, fields] = await initializeDatabaseConnection.query(sqlQuery, [userName]);
+    console.log(users);
+    return users || null;
+};
+
+
 const getUserByEmail = async (email) => {
     const sqlQuery = 'SELECT * FROM users WHERE email = ?';
     const [users, fields] = await initializeDatabaseConnection.query(sqlQuery, [email]);
-    console.log(users[0]);
+    console.log(users);
     return users || null;
 };
 
@@ -96,8 +106,6 @@ const updateUser = async (userId, userData) => {
 };
 
 
-
-
 const deleteUser = async (userId) => {
     const cleanedUserId = userId.substring(1); // Прибираємо перший символ (двокрапку) не знаю чи та нормально
     const sqlQuery = 'DELETE FROM users WHERE id = ?';
@@ -115,6 +123,7 @@ const getActiveUsers = async () => {
 
 module.exports = {
     getUserById,
+    getUserByUsername,
     getUserByEmail,
     getAllUsers,
     createUser,

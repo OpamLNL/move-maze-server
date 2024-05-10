@@ -19,7 +19,8 @@ router.post('/api/auth/signin', authController.signIn);
 
 // Роути для користувачів
 router.get('/api/users/getAll', usersController.getAllUsers);
-router.get('/api/users/getUserById', usersController.getUserById);
+router.get('/api/users/getUserById/:id', usersController.getUserById);
+router.get('/api/users/getUserByUsername/:username', usersController.getUserByUsername);
 router.post('/api/users/create', usersController.createUserAndAuthenticate);
 router.put('/api/users/update/:id', usersController.updateUser);
 router.delete('/api/users/delete/:id', usersController.deleteUser);

@@ -2,6 +2,21 @@ const userRepository = require('../repositories/userRepository');
 const { generateTokens } = require('../services/authService');
 const bcrypt = require("bcrypt");
 
+const getUserByUsername = async (userName) => {
+
+    try {
+        const user = await userRepository.getUserByUsername(userName);
+        console.log('in model');
+        console.log( user);
+        if (!user) {
+            throw new Error('Користувач не знайдений.');
+        }
+        return user;
+    } catch (error) {
+        throw new Error('Помилка отримання користувача: ' + error.message);
+    }
+};
+
 const getUserById = async (userId) => {
     try {
         const user = await userRepository.getUserById(userId);
@@ -17,6 +32,7 @@ const getUserById = async (userId) => {
 const getUserByEmail = async (email) => {
     try {
         const user = await userRepository.getUserByEmail(email);
+
         if (!user) {
             throw new Error('Користувач не знайдений.');
         }
@@ -120,6 +136,7 @@ const getActiveUsers = async () => {
 
 module.exports = {
     getUserById,
+    getUserByUsername,
     getUserByEmail,
     getAllUsers,
     createUserAndAuthenticate,

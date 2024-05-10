@@ -28,6 +28,12 @@ app.use('/images', express.static(relativeImagesPath));
 // Використання middleware morgan для виводу логів
 app.use(morgan('combined'));
 
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+});
+
+
 // Middleware для парсингу JSON тіл
 app.use(express.json());
 

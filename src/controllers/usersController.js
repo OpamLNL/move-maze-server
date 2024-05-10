@@ -7,6 +7,33 @@ const getUserByEmail = async (email) => {
 };
 
 
+const getUserByUsername = async (req, res) => {
+
+    console.log("in controller" + req.params.username);
+    try {
+        const username = req.params.username;
+
+        if (!username) {
+            return res.status(400).json({ error: 'Missing user UserName' });
+        }
+
+        const user = await userModel.getUserByUsername(username);
+        console.log("in controller" );
+        console.log(user);
+
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Помилка отримання користувача за іменем:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
 const getUserById = async (req, res) => {
     try {
         const userId = req.params.id;
@@ -144,6 +171,7 @@ const createUserByAdmin = async (req, res) => {
 
 module.exports = {
     getUserById,
+    getUserByUsername,
     getUserByEmail,
     getAllUsers,
     createUserAndAuthenticate,
