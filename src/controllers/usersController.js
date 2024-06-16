@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const userModel = require('../models/userModel');
 const authService = require('../services/authService');
 
@@ -74,7 +74,8 @@ const createUserAndAuthenticate = async (req, res) => {
         const userData = {
             username,
             email,
-            password: hashedPassword,
+            //password: hashedPassword,
+            password: password,
             avatar: avatar || 'default_avatar.png',
             birth_date: birth_date || null,
             bio: bio || '',

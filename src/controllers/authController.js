@@ -1,5 +1,5 @@
 // authController.js
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { getUserByEmail } = require('../controllers/usersController');
 const { generateTokens } = require('../services/authService');
 
@@ -8,12 +8,20 @@ exports.signIn = async (req, res) => {
 
     try {
         const user = await getUserByEmail(email);
+
+
         if (!user) {
             return res.status(401).json({ message: "Невірний email або пароль" });
         }
 
         const match = await bcrypt.compare(password, user.password);
         if (!match) {
+            console.log(user.password);
+
+            const hashedPassword = await bcrypt.hash(password, 10);
+            console.log(password);
+            console.log(hashedPassword);
+
             return res.status(401).json({ message: "Невірний email або пароль" });
         }
 
