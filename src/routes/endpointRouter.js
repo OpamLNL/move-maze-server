@@ -11,7 +11,7 @@ const authController = require("../controllers/authController");
 
 // Роут для локального сервера
 router.get('/', (req, res) => {
-    res.send('Ласкаво просимо на локальний сервер!');
+    res.send('Ласкаво просимо на локальний сервер!!!!');
 });
 
 //авторизація
