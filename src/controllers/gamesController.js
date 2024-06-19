@@ -22,6 +22,9 @@ const getGameById = async (req, res) => {
 };
 
 const getAllGames = async (req, res) => {
+
+console.log('getAllGames');
+
     try {
         const games = await gameModel.getAllGames();
         res.status(200).json(games);
