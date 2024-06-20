@@ -14,7 +14,8 @@ const {closePool} = require("./config/database");
 app.use((req, res, next) => {
     const allowedOrigins = [
         'https://movi-maze-client.vercel.app',
-        'http://31.43.235.201'
+        'http://31.43.235.201',
+        'http://localhost:3000'
     ];
     const origin = req.headers.origin;
 
