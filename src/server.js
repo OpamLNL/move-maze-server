@@ -12,9 +12,16 @@ const {closePool} = require("./config/database");
 
 // Middleware для обробки CORS
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 
+    const allowedOrigins = [
         'https://movi-maze-client.vercel.app',
-        'http://31.43.235.201');
+        'http://31.43.235.201'
+    ];
+    const origin = req.headers.origin;
+
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
